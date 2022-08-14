@@ -234,3 +234,154 @@ url-loader 可以把静态文件变成base64字符串，进行返回，可以直
 
 v5之后
 这二个loader的都废弃了
+
+
+
+happy撤回了一条消息
+后知后觉后想念
+老师 为什么 webapck的配置 写在配置文件里也可以 写在package.json里也可以？ 
+
+因为内部会去读对应的位置的配置
+
+happy
+browerlist和postcss.config.js都配置了 ，哪个优先呢 
+优先级是有原则 
+离用户越近的，优先有越高
+11:18
+能
+这样做有什么好处呢？小图片都不会转化base64了 
+图片小的话转成base64进行内联可以节约http请求数
+图片大的转成base64会加大html文件体积，增加下载html的时间不划算了
+奈斯啊小刘超奈斯
+svg属于哪个? url-load么 
+你自己看着办
+赵文明
+图片的导入什么时候用import  require 
+奈斯啊小刘超奈斯
+webpack都可以,我记得这个要配置一下package,vite只可以使用import 
+vite 依赖es module 按理说不支持commonjs
+奈斯啊小刘超奈斯
+现在区分环境配置也要用 merge那个包么? 
+
+webpack-merge 可以用来合并不同的环境下的配置文件
+
+
+
+这个type的值是固定的？？ 是的
+奈斯啊小刘超奈斯
+固定什么意思 
+晚风
+怎么理解离用户越近呢 老师 
+https://github.com/browserslist/browserslist#readme
+丁浩宇
+图片大小多少属于临界值 自己定 8K
+丁浩宇
+多大的使用内连比较好 
+能
+图片转化base64之前也可以指定大小，理解不了他这个废弃url-load的动机是什么 
+能
+或者说，url-load有什么问题 
+麻烦 ，需要单独安装loader,单独配置
+
+
+
+
+inline resource 什么区别 
+奈斯啊小刘超奈斯
+一个是原文件引入返回地址,一个返回base64字符串 是的
+sunShine
+那我怎么让这些图之类的静态文件打包进dist中的asset这个文件夹 
+在webpack里，所有的输出路径，也可以指定输出的目录
+奈斯啊小刘超奈斯
+有配置应该也是 output 
+张仁阳
+
+
+webpack
+babel-loader
+@babel/core
+@babel/preset-env
+@babel/preset-react
+@babel/plugin-proposal-decorators
+@babel/plugin-proposal-private-property-in-object
+@babel/plugin-proposal-private-methods
+@babel/plugin-proposal-class-properties
+
+
+
+11:36
+好大鸭
+一张png图片，默认配饰的是recourse,我想让他小于8k转base64 
+
+ {
+        test: /\.png$/,//会把txt内容直接返回
+        type: 'asset',//表示可以根据实际情况进行自选择是resource还inline
+        parser: {
+          dataUrlCondition: {
+            maxSize: 8 * 1024//如果文件大小小于8K就走inline,如果大于8K就
+          }
+        }
+      }
+
+123
+query 是啥？ 
+Mob
+现在是内置clean-webpack-plugin了？
+没有内置 
+李杰
+都这么多年了，浏览器为啥还需要转es5 
+奈斯啊小刘超奈斯
+兜底 
+11:44
+lesson
+早package 中配置 babel 和 babelrc 中配 会同时执行吗 
+package.json中的优先级会高一些
+丁浩宇
+那要是不传参的话，能不能把二维数组变成一维数组 可以 
+
+
+11:52
+123
+感觉这个leacy 和loose 没什么用 
+leacy是true还是false会决定你以何种方式使用装饰器 @dec class P  class @dec P
+奈斯啊小刘超奈斯
+同学们我们上午几点呀 12点
+钟畅
+最终打包预设的集合是只打包使用到的插件嘛 
+
+打包的过程会使用到插件，而插件是在预置里配置的
+
+
+英剑คิดถึง
+12 
+奈斯啊小刘超奈斯
+clean-webpack-plugin 不是有一个配置clear:true不是就可以了么 
+何以时光陌
+现在图片转base64要自己配置嘛 
+
+
+
+我还是习惯老的方式使用装饰器 
+隽
+.dev .prod这两个文件怎么读取的啊，没有听到，可以讲一下吗 
+隽
+  
+123
+装 dotenv 
+钟畅
+是只打包出用到的转义插件 没用到不会被打包进来 
+
+
+mobx5是使用的装饰器，但是mobx6.0已经废弃了
+
+
+
+不理解为啥 corss-env 设置的 NODE_ENV 在vite。
+config 中的procss.env。NODE_ENV  拿不到 
+陈柳鹏
+
+
+老师，前面设置打包输出文件那里没听清楚，是不是设置了输出目录，
+然后所有的依赖都打包到那个目录了是吧?
+是的
+我们实际项目里面也可以配按资源类型输出到指定文件夹是吧

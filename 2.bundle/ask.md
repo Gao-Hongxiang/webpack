@@ -100,3 +100,26 @@ commonjs和 es module 导入导出怎么区分
 "age": age
 这两种有什么区别呢？ 
 
+
+
+16:10
+forrest
+老师，是不是说在
+通过webpack打包的项目中用require引入模块比import引入模块打包的快？ 
+
+16:15
+你说的都对
+主要是应用在 esmoudle的默认导出对象上 
+好大鸭
+我再看一下刚才的default的流程 
+
+
+好大鸭
+有点没看懂 
+会议用户619087
+上一个没看懂。这个看懂了 
+happy
+es2es里面咋没有n方法呢 
+好大鸭
+下面的getter 还有一个 a 属性 
+

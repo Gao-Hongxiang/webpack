@@ -1,64 +1,38 @@
-/******/ (() => { // webpackBootstrap
-/******/ 	var __webpack_modules__ = ({
 
-/***/ "./src/age.js":
-/*!********************!*\
-  !*** ./src/age.js ***!
-  \********************/
-/***/ ((__unused_webpack_module, exports) => {
-
-let value = {number:100};
-exports.value = value;
-
-setTimeout(() => {
-  value.number = 200;
-},2000)
-
-/***/ })
-
-/******/ 	});
-/************************************************************************/
-/******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
-/******/ 	
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/ 		// Check if module is in cache
-/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
-/******/ 		if (cachedModule !== undefined) {
-/******/ 			return cachedModule.exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			// no module.id needed
-/******/ 			// no module.loaded needed
-/******/ 			exports: {}
-/******/ 		};
-/******/ 	
-/******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 	
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/ 	
-/************************************************************************/
-var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
-(() => {
-/*!**********************!*\
-  !*** ./src/index.js ***!
-  \**********************/
-/* let title = require('./title.js');
-console.log(title.default);
-console.log(title.age); */
-
-let ageModule = __webpack_require__(/*! ./age */ "./src/age.js");
-
-setTimeout(() => {
-  console.log(ageModule.value.number);
-},3000)
-})();
-
-/******/ })()
-;
+  var modules = {};
+  var cache = {};
+  function require(moduleId) {
+    var cachedModule = cache[moduleId];
+    if (cachedModule !== undefined) {
+      return cachedModule.exports;
+    }
+    var module = cache[moduleId] = {
+      exports: {}
+    };
+    modules[moduleId](module, module.exports, require);
+    return module.exports;
+  }
+  require.d = (exports, definition) => {
+    for (var key in definition) {
+      if (require.o(definition, key) && !require.o(exports, key)) {
+        Object.defineProperty(exports, key, {
+          enumerable: true,
+          get: definition[key]
+        });
+      }
+    }
+  };
+  require.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop);
+  require.r = exports => {
+    if (typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+      Object.defineProperty(exports, Symbol.toStringTag, {
+        value: 'Module'
+      });
+    }
+    Object.defineProperty(exports, '__esModule', {
+      value: true
+    });
+  };
+  require.e("src_hello_js").then(require.bind(require, "./src/hello.js")).then(result => {
+    console.log(result.default);
+  });

@@ -38,14 +38,13 @@ function webpackJsonpCallback([chunkIds, moreModules]) {
   for (let i = 0; i < chunkIds.length; i++){
     const chunkId = chunkIds[i];
     resolves.push(installedChunks[chunkId][0]);
-    //installedChunks表示各个代码块的加载状态 0表示已经加载完毕
     installedChunks[chunkId] = 0;
   }
   for (const moduleId in moreModules) {
     modules[moduleId]=moreModules[moduleId]
   }
   //依次取出promise的resolve方法，让它对应的promise变成成功态
-  while (resolves.length>0) {
+  while (resolves.length) {
     resolves.shift()();
   }
 }
@@ -64,19 +63,12 @@ require.l = (url) => {
   let script = document.createElement('script');
   script.src = url;
   document.head.appendChild(script);
-  //一般jsonp对应script都是临时的，用完要删除掉
-  script.onload = () => {
-    script.remove();
-  }
 }
 //jsonp 通过JSONP的方式加载chunkId对应的JS文件，生成一个promise放到promises数组里
-require.f.j = (chunkId, promises) => {
-  let installedChunkData = installedChunks[chunkId];
-  if (installedChunkData === 0) {
-    return;
-  }
+require.f.j = (chunkId,promises) => {
+  let installedChunkData;
   const promise = new Promise((resolve,reject) => {
-    installedChunkData=installedChunks[chunkId]=[resolve]
+    installedChunkData=installedChunks[chunkId]=[resolve,reject]
   });
   installedChunkData[2] = promise;
   //installedChunkData=[resolve,reject,promise]
@@ -93,9 +85,6 @@ const chunkLoadingGlobal = window["webpackChunk_2_bundle"] = [];
 chunkLoadingGlobal.push = webpackJsonpCallback;
 require.e("src_hello_js").then(require.bind(require, "./src/hello.js")).then(result => {
   console.log(result.default);
-  require.e("src_hello_js").then(require.bind(require, "./src/hello.js")).then(result => {
-    console.log(result.default);
-  });
 });
 
 //代码块其实就模块的集合

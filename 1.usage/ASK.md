@@ -385,3 +385,96 @@ config 中的procss.env。NODE_ENV  拿不到
 然后所有的依赖都打包到那个目录了是吧?
 是的
 我们实际项目里面也可以配按资源类型输出到指定文件夹是吧
+
+
+
+以前用的是clean-webpack-plugin 
+奈斯啊小刘超奈斯
+clean在mac下不能使用,不然热更新会失败,之前的bug,现在不清楚修复没有 
+14:17
+奈斯啊小刘超奈斯撤回了一条消息
+追风筝的人
+eslint airbnb 和 standard有什么区别啊 
+奈斯啊小刘超奈斯
+继承的规则可以去npm查看么? 
+wind-zhou
+
+eslint首先需要一个配置文件
+如果你想在vscode看到红色的波浪线，需要安装vscode插件
+如果你想在打包的时候的时候报错，需要使用eslint-loader,报错了会阻止继续编译打包
+
+eslint 只有安装了插件才会再有语法错误时阻止编译吗？ 
+奈斯啊小刘超奈斯
+写了ts-loader还用写 babel-loader么 
+ts-loader性能太差，而且尽量别用了babel-loader
+追风筝的人
+—fix应该就可以修复吧 
+123
+关闭vscode 
+奈斯啊小刘超奈斯撤回了一条消息
+123
+npm run serve 
+
+
+
+直接ctrol s 
+123
+control 
+会议用户619087
+git提交代码校验是不是也是eslint 
+哈士奇 husky 
+奈斯啊小刘超奈斯
+那个不是eslint 
+丁浩宇
+webpack是怎么停止打包的 
+
+
+
+
+
+就是说 eslintrc.js 只是给 插件来读取的，编译的时候靠的是loader的能力？ 
+不是仅仅给插件
+
+编译时候，会走eslint-loader,eslint 内部会使用eslint这个核心包，这个核心包工作的时候
+需要读取用户配置的eslintrc.js
+
+
+难忘记nice
+之前有个命令行包，在mac上没法用，就是因为LF 和 CRLF 
+难忘记nice
+这种有什么解决办法吗 
+奈斯啊小刘超奈斯
+没看出来两个换行有什么区别呀 不可见字符
+说滴对！
+mock是不是基于这个是proxy的 原理是类似 可以通过proxy支持mock功能
+
+14:32
+袖珍汤锅
+可以代理到 https 的网址下吗？ 
+
+
+jialingling
+设置了代理就不会有跨域问题嘛?之前好像遇到过有的后台接口会报跨域 
+是的
+奈斯啊小刘超奈斯
+老师,在二级路由情况下就不行了
+比如说 /api 可以被转换
+/home/api就不可以了,因为跳转到别的路由了
+/home/name/api  还有这种
+这样代理该怎么配置呀
+umi可能就被改过了,就不会有这种问题 
+lesson
+我们这边用的 是浏览器代理插件 switch 
+wind-zhou
+像Beautify，Prettier 这些代码格式化的插件 是按照什么风格进行格式化的？
+  
+5255
+还有一种情况是 /home  路由里面也是home开头，刷新的时候就会走接口，精准匹配也不行 
+
+
+亚蒙
+代理和中间件能共用吗 
+proxy
+奈斯啊小刘超奈斯
+老师新项目推荐 umi还是 vite 
+

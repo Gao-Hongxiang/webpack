@@ -1,10 +1,12 @@
-
 function readonly(target, key, descriptor) {
   descriptor.writable = false;
 }
 class Person {
   @readonly PI = 3.14
 }
-let person = new Person();
+const person = new Person();
 person.PI = 3.15;
-console.log(person.PI);
+const a = 1;
+const b = 2;
+const c = 3;
+const d = 4;

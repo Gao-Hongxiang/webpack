@@ -442,3 +442,11 @@ shine
 Tony
 unplugin-auto-import 
 
+
+
+咋的在react的原型上添加方法、  比如vue中Vue.prototype.$echarts = echarts这样 。想在react中用 echarts，每个组件用到 echarts都要引入一遍吗？ 
+我们无法像vue一样， 我们可以使用一些插件或者配置自动向模块中注入echarts
+Provide
+
+Tailwind CSS是什么? 
+

@@ -4,7 +4,9 @@ const pathLib = require('path');
 const autoTrackerPlugin = require('./auto-tracker-plugin');
 //函数声明 函数表达式 箭头函数 类里的函数 
 const sourceCode = `
-import xxx from 'logger';
+import xxx1 from 'logger1';
+import xxx2 from 'logger2';
+import xxx3 from 'logger3';
 function sum(a,b){
   return a+b;
 }

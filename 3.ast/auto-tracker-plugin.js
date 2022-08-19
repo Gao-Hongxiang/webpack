@@ -17,6 +17,7 @@ const autoTrackerPlugin = (options) => {
             ImportDeclaration(path) {//此方法会进入多次
               const importedModuleName = path.get('source').node.value;
               if (importedModuleName === options.name) {
+                //老师 那个 .0是不是跟写多少个import 没有关系呀
                 const specifierPath = path.get('specifiers.0');
                 if (specifierPath.isImportDefaultSpecifier()//默认导入
                   || specifierPath.isImportSpecifier()//普通导入

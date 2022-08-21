@@ -14,7 +14,14 @@ const entryFile = path.resolve(__dirname, 'src/index.js')
 //为了保证执行的时候按我们希望的顺序执行，所以我们可以给loader分类
 //eslint-loader=pre  babel-loader=normal
 //吃饭的时候 饭前洗手 饭后清理餐桌
+/**
+ * Auto=Normal
+ * !  noAuto
+ * -! noPreAuto
+ * !! noPrePostAuto
+ */
 let request = `inline-loader1!inline-loader2!${entryFile}`;
+//require(`inline-loader1!inline-loader2!${entryFile}`);
 const rules = [
   {
     test: /\.js$/,
@@ -31,12 +38,47 @@ const rules = [
     use:['post-loader1','post-loader2']
   }
 ]
+const parts = request.replace(/^-?!+/,'').split('!');
+let resource = parts.pop();//取出最后一个元素，也就是要加载的文件或者说模块
+let inlineLoaders = parts;
+let preLoaders = [], postLoaders = [], normalLoaders = [];
+for (let i = 0; i < rules.length; i++){
+  let rule = rules[i];
+  if (resource.match(rule.test)) {
+    if (rule.enforce == 'pre') {
+      preLoaders.push(...rule.use);
+    }else if (rule.enforce == 'post') {
+      postLoaders.push(...rule.use);
+    } else {
+      normalLoaders.push(...rule.use);
+    }
+  }
+}
 let loaders = [];
-
+if (request.startsWith('!!')) {
+  loaders = inlineLoaders;
+} else if (request.startsWith('-!')) {
+  loaders = [...postLoaders,...inlineLoaders];
+} else if (request.startsWith('!')) {
+  loaders = [
+    ...postLoaders,
+    ...inlineLoaders,
+    ...preLoaders
+  ]
+} else {
+  loaders = [
+    ...postLoaders,
+    ...inlineLoaders,
+    ...normalLoaders,
+    ...preLoaders
+  ]
+}
+//把loader从一个名称变成一个绝地路径
+loaders = loaders.map(loader => path.resolve(__dirname, 'loader-chain', loader));
 runLoaders({
-  resource:entryFile,//要处理的资源文件
+  resource,//要处理的资源文件
   loaders,//资源文件需要经过发些loader的处理
-  readResource:fs.readFile.bind(fs)//读文件用哪个方法
+  readResource:fs.readFile//读文件用哪个方法
 }, (err, result) => {
   console.log(err);
   console.log(result.result[0].toString());//转换后的结果

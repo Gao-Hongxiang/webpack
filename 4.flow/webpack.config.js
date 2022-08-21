@@ -10,7 +10,7 @@ module.exports = {
   },
   entry: {
     entry1: './src/entry1.js',
-    entry2:'./src/entry2.js'
+    entry2:'./src/entry2.js'//name就是此模块属于哪个模块  a
   },
   output: {
     path: path.resolve(__dirname, 'dist'),

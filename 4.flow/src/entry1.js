@@ -1,2 +1,2 @@
-let title = require('./title');
+let title = require('./title.js');
 console.log('entry1',title);

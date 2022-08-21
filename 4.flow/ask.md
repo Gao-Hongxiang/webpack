@@ -240,3 +240,73 @@ bundle
 window / \都可以找到文件
 
 
+
+
+
+
+袖珍汤锅
+要区分是相对路径还是 node_modules 里 
+123
+不是相对路径就是第三方 
+123
+相当于entry1 
+lgx
+不能根据.判断是不是第三方模块吧 
+只要相对路径  
+./
+../
+
+11:35
+shine
+老师 这里如果一个模块被多个模块引入了是不是就要判断好多次？为什么不做个缓存 cache 
+会的
+shine
+开销小，没必要吗？ 
+123撤回了一条消息
+123撤回了一条消息
+123撤回了一条消息
+北极那企鹅丶
+还有import导入吧 
+123
+import 是判断 ImportDeclaration 吧？ 
+xxx
+改参数是干啥 
+shine
+names 这里还是有点小懵，其实就是 依赖模块的moduleId? 
+不是的
+张仁阳
+http://www.zhufengpeixun.com/strong/html/103.7.webpack-plugin.html#t217.4%20AutoExternalPlugin 
+
+
+
+
+jialingling
+用相对路径做moduleID是用来干什么哈，是不是用绝对路径也可以，只是没有必要 
+这是规范
+绝对路径肯定是不行的不好
+绝对路径里会包含开发者硬盘信息，会泄露隐私
+
+shine
+嗷嗷  1111 
+没离开过
+node.arguments[0] 那里不太懂，赋值作用是为了什么 
+为了修改参数，所有引入模块的地方都用相对于根目录的相对路径，也就是模块ID
+因为在modules里模块定义的名称就是模块ID
+
+shine
+能 
+123
+name 是此模块被谁 依赖了？ ./title  被entry1 以来了 
+可以这么认为
+
+此模块被 哪个入口依赖了。此依赖可能是直接的，也可以间接的
+ 
+入口会决定代码块chunk的名称
+
+123撤回了一条消息
+123
+如果 title 被entry1引入了 也被entry2 引入了 那么 name 就是【entry1 和entry2】 
+是
+如果是不被入口文件依赖，而是依赖文件之间的依赖，也只记录入口文件这个name是吧 
+是的
+我爸入口 name 姓

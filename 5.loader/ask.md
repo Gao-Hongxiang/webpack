@@ -219,3 +219,12 @@ lgx
 
 
 
+
+
+xxxx
+less 变 css 也是 ast 吗 
+是的
+北极那企鹅丶
+不用行内是因为rule里面有style-loader，会再次调用，
+然后style-loader的pitch会再次require内联loader 
+是的

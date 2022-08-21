@@ -24,15 +24,30 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.less$/,
+        use: [
+          "style-loader",
+          "less-loader"
+        ]
+      }
+      /* {
         test: /\.js$/,
         exclude: /node_modules/,
-        use: {
-          loader:'babel-loader' ,
-          options: {
-            presets:["@babel/preset-env"]
+        use: [
+          {
+            loader:'babel-loader1' ,
+            options: {
+              presets:["@babel/preset-env"]
+            }
+          },
+          {
+            loader:'babel-loader2' ,
+            options: {
+              presets:["@babel/preset-env"]
+            }
           }
-        }
-      }
+        ]
+      } */
     ]
   },
   plugins: [

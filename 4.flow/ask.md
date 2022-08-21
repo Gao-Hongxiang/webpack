@@ -126,3 +126,117 @@ shine
 老师，第一节课里，类型别名那里，
 其他的类型是不是都属于program类型？
 看到的ast树里面最上层的类型都是program
+
+
+jialingling
+BlockStatement是不是属于program类型哈
+不是 
+Program代表整个程序，根节点
+{}
+
+
+会议用户619087
+编译js的时候，babel-loader是生成一个programmer吗，还是多个
+每个JS文件会生成一个AST语法树，每个语法树都对应一个Program 
+wind-zhou
+不同的解析器转换ast不同，那么针对解析器写的转换插件，是不是也不能兼容呀 
+是的
+acron 插件和babel插件不兼容
+
+
+
+
+英剑คิดถึง
+多入口的应用场景是啥 
+做一个网站
+后台
+前台
+
+Anne
+什么场景下有多个entry? 
+两个站点
+
+09:56
+123
+这些plugin 看是在什么时机call 虽然注册是一上来就注册的 
+在编译开始的时候都注册了，也就是说都监听了。
+但是会在自己合适的时间点触发，或者说执行
+类似于生命周期
+shine
+活动页面不是经常很多个么 一个项目多个活动 每次都是一个新的html 
+会议用户619087
+为什么不是将plugin挂载到compiler 
+
+
+
+shine
+webpack中有 
+123
+但是build的时候不会报错吗？ 
+shine
+如果过程中有错误呢？ 
+ZhangLe
+怎么没看到loader的处理？ 
+shine
+
+
+
+
+爱吃橘子
+能不能别问这些加快节奏的问题 
+北极那企鹅丶
+compiler 对象包含了 webpack 环境所有的配置信息，包括 options、loaders、plugins 这些信息，这个对象在 webpack 启动的时候被实例化，它是全局唯一的，可以简单地把它理解为 webpack 实例。
+
+compilation 对象代表了一次资源版本的构建。它包含了当前的模块资源(modules)、编译生成资源(asset files)、变化的文件(files)、以及被跟踪依赖的状态信息(fileDependencies)等。当 webpack 以开发模式运行时，每当检测到一个变化，一次新的 compilation 将被创建。compilation 对象也提供了很多事件回调供插件做扩展。通过 compilation 也可以读取到 compiler 对象。
+
+tapable 是 webpack 的一个核心工具，它暴露了 tap、tapAsync、tapPromise 方法，可以使用这些方法来触发 compiler 钩子，使得插件可以监听 webpack 在运行过程中广播的事件，然后通过 compiler 对象去操作 webpack。我们也可以使用这些方法注入自定义的构建步骤，这些步骤将在整个编译过程中的不同时机触发。 
+10:15
+丁浩宇
+监听file有什么作用 
+123
+fs。watch 看到fileDependency 变化就执行后面的函数是 fs。watch 是fs 内置的？ 
+ 是的
+
+赵丽文
+this.hooks.done.call()是干什么用的 
+触发done这个钩子
+
+老师 deps的变化会导致整个依赖链路上的内容都重新编译吗？还是只编译变化部分？ 
+如果有文件变化的话，会重新开始编译 
+在webpack5以前，全部会重新编译，比较慢，cache hardsource dllplugin
+webpack5以后，内置这些缓存机制 
+
+
+10:24
+lesson撤回了一条消息
+123撤回了一条消息
+会议用户619087
+面试的时候问过，浏览器缓存怎么做 
+123
+.hbs 是啥文件呢？ 
+handlebar的模板文件
+插件语法，和vue类似
+{{age}}
+
+
+
+cache 在开发的时候，更改文件也会走缓存吗？ 
+肯定会的
+一个插件，提升webpack 80%构建速度 
+HardSourcePlugin
+shine撤回了一条消息
+好大鸭
+打印一下stats  
+123
+file是最终产物？是的 
+bundle
+
+
+
+123撤回了一条消息
+123
+这个肯定不是用来 查找文件路径的，不然不区分系统是找不到文件的 
+不区分也可以找到文件
+window / \都可以找到文件
+
+

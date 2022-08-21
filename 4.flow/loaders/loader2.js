@@ -4,7 +4,6 @@
  * 
  */
 function loader2(input) {
-  //return input + '//loader2';
-  return `module.exports = "${input}//loader2"`;
+  return input;
 }
 module.exports = loader2;

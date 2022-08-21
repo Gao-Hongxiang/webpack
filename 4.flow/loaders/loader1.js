@@ -4,6 +4,6 @@
  * 
  */
 function loader1(input) {
-  return input+'//loader1';
+  return input;
 }
 module.exports = loader1;

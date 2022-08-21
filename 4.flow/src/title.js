@@ -1,3 +1,1 @@
-
-let msg = require('./msg');
-module.exports = 'title'+msg
+module.exports = 'title';

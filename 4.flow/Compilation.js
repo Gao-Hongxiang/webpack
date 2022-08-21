@@ -16,7 +16,7 @@ class Compilation {
     this.chunks = [];//本次编译所组装出的代码块
     this.assets = {};//key是文件名,值是文件内容
     this.files = [];//代表本次打包出来的文件
-    this.fileDependencies = [];//本次编译依赖的文件或者说模块
+    this.fileDependencies =new Set();//本次编译依赖的文件或者说模块
   }
   build(callback) {
     //5.根据配置中的entry找出入口文件
@@ -28,12 +28,24 @@ class Compilation {
     }
     for (let entryName in entry) {
       let entryFilePath = path.posix.join(baseDir, entry[entryName]);
-      this.fileDependencies.push(entryFilePath);
+      this.fileDependencies.add(entryFilePath);
       //6.从入口文件出发,调用所有配置的Loader对模块进行编译
       let entryModule = this.buildModule(entryName, entryFilePath);
-      this.modules.push(entryModule);
+      //this.modules.push(entryModule);
+      //8.根据入口和模块之间的依赖关系，组装成一个个包含多个模块的 Chunk
+      let chunk = {
+        name: entryName,
+        entryModule,
+        modules:this.modules.filter(module=>module.names.includes(entryName))
+      }
+      this.chunks.push(chunk);
     }
-    console.dir(this.modules,null,2);
+    //9.再把每个 Chunk 转换成一个单独的文件加入到输出列表
+    this.chunks.forEach(chunk => {
+      const filename = this.options.output.filename.replace('[name]',chunk.name);
+      this.files.push(filename);
+      this.assets[filename] = getSource(chunk);
+    });
     callback(null, {
       modules: this.modules,
       chunks: this.chunks,
@@ -85,7 +97,7 @@ class Compilation {
           } else {//如果不是以.开头的话，就是第三方模块
             depModulePath = require.resolve(depModuleName)
           }
-          this.fileDependencies.push(depModulePath);
+          this.fileDependencies.add(depModulePath);
           //获取依赖的模块的ID,修改语法树，把依赖的模块名换成模块ID
           let depModuleId = './' + path.posix.relative(baseDir, depModulePath)
           node.arguments[0] = types.stringLiteral(depModuleId);
@@ -124,5 +136,36 @@ function tryExtensions(modulePath,extensions) {
     }
   }
   throw new Error(`找不到${modulePath}`);
+}
+function getSource(chunk) {
+  return `
+  (() => {
+    var modules = {
+      ${
+        chunk.modules.map((module) => `
+          "${module.id}": module => {
+            ${module._source}
+          }
+        `).join(',')
+      }
+    };
+    var cache = {};
+    function require(moduleId) {
+      var cachedModule = cache[moduleId];
+      if (cachedModule !== undefined) {
+        return cachedModule.exports;
+      }
+      var module = cache[moduleId] = {
+        exports: {}
+      };
+      modules[moduleId](module, module.exports, require);
+      return module.exports;
+    }
+    var exports = {};
+    (() => {
+      ${chunk.entryModule._source}
+    })();
+  })();
+  `;
 }
 module.exports = Compilation;

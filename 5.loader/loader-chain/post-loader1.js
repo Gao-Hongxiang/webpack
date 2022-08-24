@@ -6,6 +6,6 @@ function loader(source) {
 }
 loader.pitch = () => {
   console.log('post-loader1-pitch');
-  return 'post-loader1';
+  //return 'post-loader1';
 }
 module.exports = loader;

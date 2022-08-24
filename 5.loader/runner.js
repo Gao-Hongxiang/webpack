@@ -75,6 +75,7 @@ if (request.startsWith('!!')) {
 }
 //把loader从一个名称变成一个绝地路径
 loaders = loaders.map(loader => path.resolve(__dirname, 'loader-chain', loader));
+debugger
 runLoaders({
   resource,//要处理的资源文件
   loaders,//资源文件需要经过发些loader的处理

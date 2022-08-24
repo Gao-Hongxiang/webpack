@@ -14,7 +14,7 @@ function createLoaderObject(loaderAbsPath) {
     raw,
     data: {},//每个loader都有一个自已的自定久对象，可以有用来保存和传递数据
     pitchExecuted: false,//表示此loader的pitch已经执行过了
-    normaExecuted:false//表示此loader的normal函数已经执行过了
+    normalExecuted:false//表示此loader的normal函数已经执行过了
   }
 }
 /**
@@ -30,13 +30,53 @@ function convertArgs(args,raw) {
   }
 }
 function iterateNormalLoaders(processOptions,loaderContext,args,pitchingCallback) {
+  if (loaderContext.loaderIndex<0) {
+    return pitchingCallback(null,args)
+  }
   let currentLoader = loaderContext.loaders[loaderContext.loaderIndex];
-  let fn = currentLoader.normal;
-  currentLoader.normaExecuted = true;
+  if (currentLoader.normalExecuted) {
+    loaderContext.loaderIndex--;
+    return iterateNormalLoaders(
+      processOptions,loaderContext,args,pitchingCallback
+    )
+  }
+  let fn = currentLoader.normal;//就是loader里的normal函数
+  currentLoader.normalExecuted = true;
   convertArgs(args, currentLoader.raw);
   //要以同步或者异步的方式执行fn
-  
+  runSyncOrAsync(fn, loaderContext, args, (err,...returnArgs) => {
+    if (err) pitchingCallback(err);
+    return iterateNormalLoaders(
+      processOptions,
+      loaderContext,
+      returnArgs,
+      pitchingCallback
+    );
+  });
 
+}
+function runSyncOrAsync(fn,loaderContext,args,runCallback) {
+  let isSync = true;//默认fn的的执行是同步
+  let isDone = false;//表示当前的函数是否已经完成了
+  loaderContext.callback = (err, ...args) => {
+    if(isDone) {
+			throw new Error("callback(): The callback was already called.");
+    }
+    isDone = true;
+    //callback 是不是要判断下isSync的值啊 
+    runCallback(err,...args);
+  }
+  loaderContext.async = () => {
+    isSync = false;
+    return loaderContext.callback
+  }
+  let result = fn.apply(loaderContext, args);
+  //如果当前的执行是同步的话
+  if (isSync) {
+    isDone = true;
+    runCallback(null, result);
+  }
+  //如果是异步，不会立刻调用runCallback,需要你在loader的内部手工触发callback,然后执行runCallback
 }
 function processResource(processOptions, loaderContext, pitchingCallback) {
   processOptions.readResource(loaderContext.resource, (err,resourceBuffer) => {
@@ -71,6 +111,21 @@ function iteratePitchingLoaders(processOptions, loaderContext, pitchingCallback)
       processOptions, loaderContext, pitchingCallback
     );
   }
+  runSyncOrAsync(fn, loaderContext, [
+    loaderContext.remainingRequest,
+    loaderContext.previousRequest,
+    loaderContext.data
+  ], (err, ...returnArgs) => {
+    //判断pitch方法的返回值有没有，如果有则跳过后面的loader,返回头执行前一个loader
+    if (returnArgs.length>0&&returnArgs.some(item=>item)) {
+      loaderContext.loaderIndex--;
+      iterateNormalLoaders(processOptions,loaderContext,args,pitchingCallback);
+    } else {
+      return iteratePitchingLoaders(
+        processOptions, loaderContext, pitchingCallback
+      );
+    }
+  });
 
 }
 function runLoaders(options, finalCallback) {

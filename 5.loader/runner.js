@@ -4,7 +4,7 @@
  * =post(后置)+inline(内联)+normal(正常)+pre(前置)
  * = 厚脸挣钱
  */
-const { runLoaders} = require('loader-runner');
+const { runLoaders} = require('./loader-runner');
 const path = require('path');
 const fs = require('fs');
 //这是我要使用loader处理的文件
@@ -78,8 +78,9 @@ loaders = loaders.map(loader => path.resolve(__dirname, 'loader-chain', loader))
 runLoaders({
   resource,//要处理的资源文件
   loaders,//资源文件需要经过发些loader的处理
+  context: {age:18,author:'zhufeng'},
   readResource:fs.readFile//读文件用哪个方法
-}, (err, result) => {
+}, (err, result) => {//finalCallback
   console.log(err);
   console.log(result.result[0].toString());//转换后的结果
   //转换前源文件的内容

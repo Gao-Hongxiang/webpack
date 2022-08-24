@@ -228,3 +228,77 @@ less 变 css 也是 ast 吗
 不用行内是因为rule里面有style-loader，会再次调用，
 然后style-loader的pitch会再次require内联loader 
 是的
+奋斗ing
+
+
+less文件里引入less文件
+import语句的话，我们的less就直接处理了
+
+css文件里import进来的less文件不走less-loader吗 
+崔
+正常项目中可以直接require('!!xxx-loader!file')吗 
+可以的
+爱吃橘子
+看less.loader的callback传怎样的参数吧 
+张仁阳
+第8章: 实现css-loader 
+丁浩宇
+node.arguments[0] = types.stringLiteral(depModuleId); 
+张仁阳
+https://www.javascriptpeixun.cn/my/course/3581 
+爱吃橘子
+
+
+import  xx from 'xxx';
+
+丁浩宇
+这样写的话，node.arguments[0] 的值只有type和value，其他的字段就没有了，这样不好吧 
+node.arguments[0] = types.stringLiteral(depModuleId); 
+{value:depModuleId,raw:depModuleId}
+
+20:16
+shine
+传context是什么情况才有？
+如果你希望给所有 的loader传递一些参数的时候 
+20:23
+123
+每个loader 上都会有自己的callback 
+马上会讲，并不是每个loader有自己的callback
+每个loader在执行的时候会动态创建自己callback
+爱吃橘子
+resource是指类似less.css吗 的 就是你要引入的模块 index.css index.less
+爱吃橘子
+有 
+奋斗ing
+request打印看一下 
+loader1.js!loader2.js!loader3.js!index.less
+Anne
+69行之后，为什么不需要concat? 
+难忘记nice
+data 只可以当前loader的normal和pitch才可以取到吗 
+按理说是的
+
+
+
+
+1 
+123
+所有的loader 用的一个context 
+是的
+丁浩宇
+我的意思是node.arguments[0] = types.stringLiteral(depModuleId);这样赋值的话，会丢失其他的属性，为什么不直接node.arguments[0] .value= depModuleId不是更好吗 
+因为它没有其它属性了
+为什么我们不复用老节点呢？有可能老节点的其它属性就是错的
+
+123
+但是this。async 不是注册一个callback ？ 
+马上讲
+shine
+就相当于 我们定义的loader被拼接成一个字符串参数 是的
+123
+当前的也不要加 
+
+currentRequest是需要添加resource
+
+水星
+Loader 完了，callback会把自己的数据传给下一个 

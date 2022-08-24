@@ -85,5 +85,6 @@ runLoaders({
   console.log(err);
   console.log(result.result[0].toString());//转换后的结果
   //转换前源文件的内容
+  console.log(result.resourceBuffer);
   console.log(result.resourceBuffer?result.resourceBuffer.toString():null);
 });

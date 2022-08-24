@@ -1,0 +1,19 @@
+const { SyncHook } = require('tapable');
+/**
+ * 形参数组
+ * 形参的名义没有意义
+ */
+const hook = new SyncHook(['name', 'age']);
+/**
+ * tap的第一个参数是回调函数的名称，但是这个名字只是给程序员看的
+ */
+hook.tap('1', (name,age) => {
+  console.log(1,name,age);
+});
+hook.tap('2', (name,age) => {
+  console.log(2,name,age);
+});
+hook.tap('3', (name,age) => {
+  console.log(3,name,age);
+});
+hook.call('zhufeng',18);

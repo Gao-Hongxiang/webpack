@@ -11,3 +11,8 @@ task1 task2 task3
 是的
  
 
+
+
+resolve('result 2') 的返回值就不再是一个promise了，是一个常量，所以结束，不往下执行了，对吗？ 
+
+只要有结果就行

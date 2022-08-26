@@ -16,3 +16,9 @@ task1 task2 task3
 resolve('result 2') 的返回值就不再是一个promise了，是一个常量，所以结束，不往下执行了，对吗？ 
 
 只要有结果就行
+
+
+this.header() + this.content(）的时候，content()方法不就是定义在子类里面么？ 
+是的
+最终创建的使用的 都是子类的实例，所以都可以调用
+

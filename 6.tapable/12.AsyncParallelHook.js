@@ -1,11 +1,12 @@
-const { AsyncParallelHook } = require('tapable');
+const { AsyncParallelHook } = require('./tapable');
 const hook = new AsyncParallelHook(['name', 'age']);
 console.time('cost');
 hook.tap('tap', (name, age) => { 
   console.log('tap', name, age);
 })
-hook.tapAsync('tapAsync', (name, age) => { 
+hook.tapAsync('tapAsync', (name, age,callback) => { 
   console.log('tapAsync', name, age);
+  callback();
 })
 hook.tapPromise('1', (name,age) => {
   return new Promise((resolve) => {
@@ -36,9 +37,10 @@ hook.tapPromise('3', (name,age) => {
 //而且动态编译后的方法会覆盖hook.callAsync
 //以后再执行hook.callAsync也不需要再编译
 debugger
-hook.callAsync('zhufeng', 18, () => {
+/* hook.callAsync('zhufeng', 18, () => {
   console.log('done');
-});
+  console.timeEnd('cost');
+}); */
 hook.promise('zhufeng', 18).then(() => {
   console.log('done');
   console.timeEnd('cost');

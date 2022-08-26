@@ -71,19 +71,20 @@ class HookCodeFactory{
       };
     `;
     for (let i = 0; i < taps.length; i++){
-      const tapContent = this.callTap(i);
+      const tapContent = this.callTap(i,{onDone:()=>`if (--_counter === 0) _done();`});
       code += tapContent;
     }
     return code;
   }
   //获取每一个回调它的代码
-  callTap(tapIndex) {
+  callTap(tapIndex,{onDone}) {
     let code = ``;
     code += `var _fn${tapIndex} = _x[${tapIndex}];\n`;//取出回调函数
     let tapInfo = this.options.taps[tapIndex];
     switch (tapInfo.type) {
       case 'sync':
         code += `_fn${tapIndex}(${this.args()});\n`;//执行回调函数
+        if (onDone) code += onDone();
         break;
       case 'async':
           code += `_fn${tapIndex}(${this.args()}, function () {

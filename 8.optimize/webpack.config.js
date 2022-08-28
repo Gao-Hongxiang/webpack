@@ -2,20 +2,31 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 const SpeedMeasureWebpackPlugin = require('speed-measure-webpack-plugin');
-const { BundleAnalyzerPlugin} = require('webpack-bundle-analyzer');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
+const HashPlugin = require('./plugins/hash-plugin');
 const smw = new SpeedMeasureWebpackPlugin();
 //const bootstrap = path.resolve(__dirname,'node_modules/bootstrap/dist/css/bootstrap.css');
-module.exports = smw.wrap({
+module.exports = {
+  //如果mode是production,会启用压缩插件,如果配置为none表示不会启用压缩插件
   mode: 'development',
   devtool:false,
-  entry: './src/index.js',
+  entry: {
+    main: './src/index.js',
+    vendor: ['lodash']//vendor是供应商，第三方的意思
+    //因为第三代码是不常改变的，所以我们希望长期缓存
+  },
   output: {
     path: path.resolve('build'),
-    filename: '[name].js',
-    library: 'calculator',
-    libraryExport:'add',
-    libraryTarget:'commonjs2'
+    filename: '[name].[hash:8].js',
+    clean:true
   },
+ /*  optimization: {
+    minimize: true,//启用压缩
+    minimizer:[new TerserPlugin()]
+  }, */
   //配置如何查找源代码中引入的模块
   resolve: {
     extensions: ['.js'],
@@ -45,20 +56,36 @@ module.exports = smw.wrap({
       {
         test: /\.css$/,
         use: [
-          "style-loader",
+          MiniCssExtractPlugin.loader,
           "css-loader"
         ]
+      },
+      {
+        test: /\.(jpg|png|gif|bmp|svg)$/,
+        type: 'asset/resource',
+        generator: {
+          filename:'images/[chunkhash][ext]'
+        }
       }
     ]
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template:'./src/index.html'
+      template: './src/index.html',
+      /* minify: {
+        removeComments: true,
+        collapseWhitespace:true
+      } */
     }),
     new webpack.IgnorePlugin({
       contextRegExp: /moment$/,//目录的正则
       resourceRegExp:/locale/   //请求的正则
     }),
     //new BundleAnalyzerPlugin()
+    new MiniCssExtractPlugin({
+      filename:'[name].[contenthash:8].css'
+    }),
+    //new OptimizeCssAssetsWebpackPlugin()
+    //new HashPlugin()
   ]
-})
+}

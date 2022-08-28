@@ -36,15 +36,15 @@ hook.tapPromise('3', (name,age) => {
 //只有当你调用callAsync方法的时候才会去动态编译
 //而且动态编译后的方法会覆盖hook.callAsync
 //以后再执行hook.callAsync也不需要再编译
-debugger
-/* hook.callAsync('zhufeng', 18, () => {
-  console.log('done');
-  console.timeEnd('cost');
-}); */
-hook.promise('zhufeng', 18).then(() => {
+//如果注册的有同步同异步，只是能通过异步的方式去触发
+hook.callAsync('zhufeng', 18, () => {
   console.log('done');
   console.timeEnd('cost');
 });
+/* hook.promise('zhufeng', 18).then(() => {
+  console.log('done');
+  console.timeEnd('cost');
+}); */
 //tapAsync会让缓存失效，下次调用callAsync的时候会重新编译 
 //但是按照常理 是先做饭才吃饭呢 先callAsync编译再运行 
 /* hook.tapAsync('4', (name,age,callback) => {

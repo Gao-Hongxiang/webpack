@@ -19,11 +19,11 @@ module.exports = {
     new AutoExternalPlugin({
       jquery: {
         url: 'https://cdn.bootcss.com/jquery/3.1.0/jquery.js',
-        var:'$'
+        variable:'$'
       },
       lodash: {
         url: 'https://cdn.bootcdn.net/ajax/libs/lodash.js/4.17.21/lodash.js',
-        var:'_'
+        variable:'_'
       }
     })
     //new DonePlugin(),

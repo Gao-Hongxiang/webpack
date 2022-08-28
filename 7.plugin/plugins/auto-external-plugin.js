@@ -1,7 +1,10 @@
 
-
-class AutoExternalPlugin{
-  constructor() {
+const { ExternalModule } = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+class AutoExternalPlugin {
+  constructor(options) {
+    this.options = options;
+    this.externalModules = Object.keys(options);
     this.importedModules = new Set();
   }
   apply(compiler) {
@@ -15,18 +18,47 @@ class AutoExternalPlugin{
         .for('javascript/auto')
         .tap('AutoExternalPlugin', (parser) => {
           parser.hooks.import.tap('AutoExternalPlugin', (statement, source) => {
-            this.importedModules.add(source);
+            if (this.externalModules.includes(source))
+              this.importedModules.add(source);
           });
           //call是一个hookMap {key:Hook} 判断call这个hookMap里有没有require这个key对应的hook,如果有返回，没有则创建再返回
           parser.hooks.call.for('require').tap('AutoExternalPlugin', (expression) => {
             const source = expression.arguments[0].value;
-            this.importedModules.add(source);
+            if (this.externalModules.includes(source))
+              this.importedModules.add(source);
           });
-      })
+        })
+      //2.改造模块的生产过程，拦截生成过程，判断如果是外部模块的话，生产一个外部模块并返回
+      normalModuleFactory.hooks.factorize.tapAsync('AutoExternalPlugin', (resolveData, callback) => {
+        const { request } = resolveData;//获取加载的模块名 request = jquery
+        //如果这个要创建的模块是外部模块的话
+        if (this.externalModules.includes(request)) {
+          let { variable } = this.options[request];
+          callback(null, new ExternalModule(variable, 'window', request));
+        } else {
+          callback(null);
+        }
+      });
     })
-    setTimeout(() => {
-      console.log(this.importedModules);
-    },3000);
+    //3.向产出的html里插入CDN的脚本
+    compiler.hooks.compilation.tap('AutoExternalPlugin', (compilation) => {
+      HtmlWebpackPlugin.getHooks(compilation).alterAssetTags.tapAsync('AutoExternalPlugin', (data,callback) => {
+        const { assetTags } = data;
+        for(let key of this.importedModules){
+          assetTags.scripts.unshift({
+            tagName: 'script',
+            voidTag: false,
+            attributes: {
+              defer: false,
+              src:this.options[key].url
+            }
+          });
+        }
+        console.log(assetTags);
+        callback(null,data);
+      });
+    });
+
   }
 }
 module.exports = AutoExternalPlugin;
@@ -40,4 +72,11 @@ module.exports = AutoExternalPlugin;
  * require('query'); callExpression
  * 所以我要找项目中的import和require语句，或者说节点
  * Compiler=>NormalModuleFactory=>Parser=>import/require
+ */
+/**
+ * HtmlWebpackPlugin核心功能
+ * 1.编译HTML模板
+ * 2.根据webpack传递过来的资源信息assets,生成标签.js=>script,css=>link
+ * 3.把标签注入HTML文件中
+ * 4.写入硬盘 emit就是指写入硬盘
  */

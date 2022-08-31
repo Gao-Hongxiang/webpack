@@ -12,21 +12,25 @@ const smw = new SpeedMeasureWebpackPlugin();
 module.exports = {
   //如果mode是production,会启用压缩插件,如果配置为none表示不会启用压缩插件
   mode: 'development',
-  devtool:false,
+  devtool: false,
   entry: {
     main: './src/index.js',
-    vendor: ['lodash']//vendor是供应商，第三方的意思
+    //vendor: ['lodash']//vendor是供应商，第三方的意思
     //因为第三代码是不常改变的，所以我们希望长期缓存
   },
   output: {
     path: path.resolve('build'),
     filename: '[name].[hash:8].js',
-    clean:true
+    clean: true
   },
- /*  optimization: {
-    minimize: true,//启用压缩
-    minimizer:[new TerserPlugin()]
-  }, */
+  optimization: {
+    moduleIds: 'deterministic',
+    chunkIds: 'deterministic'
+  },
+  /*  optimization: {
+     minimize: true,//启用压缩
+     minimizer:[new TerserPlugin()]
+   }, */
   //配置如何查找源代码中引入的模块
   resolve: {
     extensions: ['.js'],
@@ -35,7 +39,7 @@ module.exports = {
     },
     modules: ['mymodules', 'node_modules'],
     mainFields: ['style', 'main'],//指是查找package.json中的字段
-    mainFiles:['index.js','base.js']
+    mainFiles: ['index.js', 'base.js']
   },
   //指定如何查找loader
   resolveLoader: {
@@ -64,7 +68,7 @@ module.exports = {
         test: /\.(jpg|png|gif|bmp|svg)$/,
         type: 'asset/resource',
         generator: {
-          filename:'images/[chunkhash][ext]'
+          filename: 'images/[chunkhash][ext]'
         }
       }
     ]
@@ -79,11 +83,11 @@ module.exports = {
     }),
     new webpack.IgnorePlugin({
       contextRegExp: /moment$/,//目录的正则
-      resourceRegExp:/locale/   //请求的正则
+      resourceRegExp: /locale/   //请求的正则
     }),
     //new BundleAnalyzerPlugin()
     new MiniCssExtractPlugin({
-      filename:'[name].[contenthash:8].css'
+      filename: '[name].[contenthash:8].css'
     }),
     //new OptimizeCssAssetsWebpackPlugin()
     //new HashPlugin()

@@ -1,2 +1,3 @@
-import './index.css'
-console.log('index3');
+import('./one');
+//import('./two');
+import('./three');

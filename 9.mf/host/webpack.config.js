@@ -36,15 +36,15 @@ module.exports = {
       remotes: {
         remote: 'remote@http://localhost:3000/remoteEntry.js'//被远程引用时可暴露的资源路径及其别名
       },
-      exposes: {
-        './Sliders': './src/Sliders'
-      },
-      filename: 'remoteEntry.js',
-      name: 'host',
-      shared: {
-        react: '^18.2.0',
-        'react-dom': '^18.2.0'
-      }
+      /*  exposes: {
+         './Sliders': './src/Sliders'
+       },
+       filename: 'remoteEntry.js',
+       name: 'host',
+       shared: {
+         react: '^18.2.0',
+         'react-dom': '^18.2.0'
+       } */
     })
   ]
 }

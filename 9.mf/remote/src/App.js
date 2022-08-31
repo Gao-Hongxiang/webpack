@@ -1,7 +1,5 @@
 import React from 'react';
 import NewsList from './NewsList';
-import _ from 'lodash';
-console.log(_);
 const RemoteSliders = React.lazy(() => import("host/Sliders"));
 const App = () => {
   return (

@@ -6,7 +6,7 @@
 		"webpack/container/reference/remote": (module, exports, require) => {
 			module.exports = new Promise(resolve => {
 				if (typeof remote !== "undefined") return resolve();
-				require.l("http://127.0.0.1:3001/remoteEntry.js", resolve);
+				require.l("http://127.0.0.1:3000/remoteEntry.js", resolve);
 			}).then(() => remote);
 		}
 	};
@@ -273,5 +273,6 @@
 	};
 	var chunkLoadingGlobal = self["webpackChunkhost"] = self["webpackChunkhost"] || [];
 	chunkLoadingGlobal.push = webpackJsonpCallback;
+	debugger
 	require("./src/index.js");
 })();

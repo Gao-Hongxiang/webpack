@@ -1,4 +1,5 @@
 var remote;
+debugger
 (() => {
 	var modules = {};
 	function require(moduleId) {

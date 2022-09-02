@@ -1,3 +1,3 @@
 import("remote/RemoteComponent").then(result => {
-    console.log(result.default);
+    console.log(result);
 });

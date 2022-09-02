@@ -59,7 +59,7 @@
 				var promise = require(data[2]).then(external => {
 					return external.get(data[1]);
 				}).then(factory => {
-					require.m[id] = module => {
+					modules[id] = module => {
 						module.exports = factory();
 					};
 				});
@@ -100,7 +100,7 @@
 			installedChunks[chunkId] = 0;
 		}
 	};
-	var chunkLoadingGlobal = self["webpackChunkhost"] = self["webpackChunkhost"] || [];
+	var chunkLoadingGlobal = self["webpackChunkhost"] = [];
 	chunkLoadingGlobal.push = webpackJsonpCallback;
 	require.e("src_bootstrap_js").then(() => require("./src/bootstrap.js"));
 })();

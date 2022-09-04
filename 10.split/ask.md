@@ -194,3 +194,40 @@ defaultVendors和default的主要是什么区别？
 是的
 分组的条件不同
 
+
+
+好大鸭
+这么复杂，以后会不会vite火起来 
+会
+15:45
+王泽峰
+看下此时的html 
+
+
+
+
+
+
+vite不是只能在开发使用么? 
+shine
+我这边现在已经在用vite了,没发现啥问题 
+好大鸭
+他是怎么区分运行时 
+运行时码是定死的，就是require
+jialingling
+那是不是runtimetrunk是不是直接设置为true就好了？ 可以的
+jialingling
+可以利用缓存，也没什么副作用 但是会多一个请求
+黑子
+你们是用vite创建的项目?打包用的什么 rollup
+好大鸭
+也是vite 
+yjg
+rollup 
+丁浩宇
+缓存组是不是适用于多入口打包，而不适合单入口打包
+是的 
+yjg
+可以使用 
+shine
+什么叫能重用 

@@ -1,4 +1,1 @@
-import(
-  /* webpackChunkName:'module1' */
-  /* webpackPrefetch:true */
-  './module1');
+import('./title').then(res => console.log(res));

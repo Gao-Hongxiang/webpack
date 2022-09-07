@@ -1,12 +1,52 @@
-const { lineBreakG } = require('acorn');
-var MagicString = require('magic-string');
+//var MagicString = require('magic-string');
+class MagicString {
+  constructor(code) {
+    this.code = code;
+  }
+  snip(start, end) {
+    return new MagicString(this.code.slice(start, end));
+  }
+  remove(start, end) {
+    return new MagicString(this.code.slice(0, start) + this.code.slice(end))
+  }
+  toString() {
+    return this.code;
+  }
+  clone() {
+    return new MagicString(this.code);
+  }
+}
+
+MagicString.Bundle = class Bundle {
+  constructor() {
+    this.sources = [];
+  }
+  addSource(source) {
+    this.sources.push(source);
+  }
+  toString() {
+    return this.sources.reduce((result, { content, separator }) => {
+      result += content;
+      result += separator;
+      return result;
+    }, ``);
+
+    /* let result = '';
+    this.sources.forEach(({ content, separator }) => {
+      result += content;
+      result += separator;
+    });
+    return result; */
+  }
+}
+
 var sourceCode = `export var name = "zhufeng"`;
 var ms = new MagicString(sourceCode);
 console.log(ms);
 console.log(ms.snip(0, 6).toString());//export slice(0,6)
 console.log(ms.remove(0, 7).toString());//var name = "zhufeng"
 
-
+/* 
 //还可以用来拼接字符串 Bundle一束 一包
 let bundle = new MagicString.Bundle();
 bundle.addSource({
@@ -17,4 +57,4 @@ bundle.addSource({
   content: `var b = 2`,
   separator: '\n'
 });
-console.log(bundle.toString());
+console.log(bundle.toString()); */

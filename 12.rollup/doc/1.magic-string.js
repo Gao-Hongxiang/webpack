@@ -1,19 +1,19 @@
 //var MagicString = require('magic-string');
 class MagicString {
-  constructor(code) {
-    this.code = code;
+  constructor(origin) {
+    this.origin = origin;
   }
   snip(start, end) {
-    return new MagicString(this.code.slice(start, end));
+    return new MagicString(this.origin.slice(start, end));
   }
   remove(start, end) {
-    return new MagicString(this.code.slice(0, start) + this.code.slice(end))
+    return new MagicString(this.origin.slice(0, start) + this.origin.slice(end))
   }
   toString() {
-    return this.code;
+    return this.origin;
   }
   clone() {
-    return new MagicString(this.code);
+    return new MagicString(this.origin);
   }
 }
 

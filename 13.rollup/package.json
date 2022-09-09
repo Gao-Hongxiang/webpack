@@ -1,8 +1,9 @@
 {
-  "name": "12.rollup",
+  "name": "13.rollup",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "build": "rollup -c"
   },
@@ -10,8 +11,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "acorn": "^8.8.0",
-    "magic-string": "^0.26.3",
     "rollup": "^2.79.0"
   }
 }

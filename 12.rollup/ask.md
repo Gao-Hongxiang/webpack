@@ -184,3 +184,31 @@ sunShine
 了？？ 
 想起来了再展开中盖的状态 
 
+
+
+21:30
+丁浩宇
+SYSTEM_VAR是从哪来的 
+yjg
+定义的 
+21:35
+shine
+这个顶级 也就是module的最外一层吧？ 
+是的
+这个顶级指的就是模块内是外面一层，最外层作用域 内声明的变量
+
+
+
+```js
+需要重命名的模块总数2-索引0=2
+const age$2 = '年龄';
+const age1 = age$2 + '1';
+需要重命名的模块总数2-索引1=1
+const age$1 = '年龄';
+const age2 = age$1 + '2';
+
+const age = '年龄';
+const age3 = age + '3';
+
+console.log(age1, age2, age3);
+```

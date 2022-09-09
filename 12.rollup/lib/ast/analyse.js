@@ -1,5 +1,6 @@
 const walk = require('./walk');
 const Scope = require('./scope');
+const { hasOwnProperty } = require('../utils');
 /**
  * 分析模块对应的AST语法树
  * @param {*} ast 语法树
@@ -15,7 +16,8 @@ function analyse(ast, code, module) {
       //这是这个语句自己对应的源码
       _source: { value: code.snip(statement.start, statement.end) },
       _dependsOn: { value: {} },//依赖的变量
-      _defines: { value: {} }
+      _defines: { value: {} },//存放本语句定义了哪些变量
+      _modifies: { value: {} }//存放本语句修改哪些变量
     });
     //找出导入了哪些变量?
     if (statement.type === 'ImportDeclaration') {
@@ -54,15 +56,37 @@ function analyse(ast, code, module) {
         module.definitions[name] = statement;
       }
     }
+    function checkForReads(node) {
+      if (node.type === 'Identifier') {
+        //表示当前这个语句依赖了node.name这个变量
+        statement._dependsOn[node.name] = true;
+      }
+    }
+    function checkForWrites(node) {
+      function addNode(node) {
+        const { name } = node;//name age
+        statement._modifies[name] = true;//表示此语句修改了name这个变量
+        //module.modifications对象 属性是变量名 值是一个修改语句组成的数组
+        if (!hasOwnProperty(module.modifications, name)) {
+          module.modifications[name] = [];
+        }
+        //存放此变量对应的所有的修改语句
+        module.modifications[name].push(statement);
+      }
+      if (node.type === 'AssignmentExpression') {
+        addNode(node.left);
+      } else if (node.type === 'UpdateExpression') {
+        addNode(node.argument);
+      }
+    }
     walk(statement, {
       enter(node) {
-        if (node.type === 'Identifier') {
-          //表示当前这个语句依赖了node.name这个变量
-          statement._dependsOn[node.name] = true;
-        }
+        checkForReads(node);
+        checkForWrites(node);
         let newScope;
         switch (node.type) {
           case 'FunctionDeclaration':
+          case 'ArrowFunctionDeclaration':
             addToScope(node.id.name);//把函数名添加到当前的作用域变量中
             const names = node.params.map(param => param.name);
             newScope = new Scope({
@@ -91,10 +115,6 @@ function analyse(ast, code, module) {
         }
       }
     });
-  });
-  ast.body.forEach(statement => {
-    console.log(statement._defines);
-
   });
 }
 module.exports = analyse;

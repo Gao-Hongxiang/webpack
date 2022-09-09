@@ -5,7 +5,8 @@ const Module = require('./module');
 class Bundle {
   constructor(options) {
     //入口文件的绝对路径
-    this.entryPath = path.resolve(options.entry);
+    this.entryPath = path.resolve(options.entry.replace(/\.js$/, '') + '.js');
+    this.modules = new Set();
   }
   build(output) {
     const entryModule = this.fetchModule(this.entryPath);
@@ -17,6 +18,9 @@ class Bundle {
     let bundle = new MagicString.Bundle();
     this.statements.forEach(statement => {
       const source = statement._source.clone();
+      if (statement.type === 'ExportNamedDeclaration') {
+        source.remove(statement.start, statement.declaration.start)
+      }
       //把每个语句对应的源代码都添加bundle实例中
       bundle.addSource({
         content: source,
@@ -26,8 +30,24 @@ class Bundle {
     //返回合并后的源代码
     return { code: bundle.toString() };
   }
-  fetchModule(importee) {
-    let route = importee;
+  /**
+   * 创建模块实例
+   * @param {*} importee 被引入的模块 ./msg.js
+   * @param {*} importer 引入别的模块的模块 main.js
+   * @returns 
+   */
+  fetchModule(importee, importer) {
+    let route;
+    if (!importer) {
+      route = importee;
+    } else {
+      if (path.isAbsolute(importee)) {
+        route = importee.replace(/\.js$/, '') + '.js';
+      } else {
+        route = path.resolve(path.dirname(importer),
+          importee.replace(/\.js$/, '') + '.js')
+      }
+    }
     if (route) {
       //读取文件对应的内容
       const code = fs.readFileSync(route, 'utf8');
@@ -37,6 +57,7 @@ class Bundle {
         path: route,//模块的路径
         bundle: this//Bundle实例
       });
+      this.modules.add(module);
       return module;
     }
   }

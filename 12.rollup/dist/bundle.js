@@ -1,5 +1,7 @@
-import { name, age } from './msg';
-function say() {
-  console.log('hello', name);
-}
-say();
+var name = 'zhufeng';
+name += 'jiagou'
+name += '2'
+console.log(name);
+var age = 14;
+age++;
+console.log(age);

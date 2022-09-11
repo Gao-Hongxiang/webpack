@@ -1,3 +1,11 @@
-console.log('腻子代码');
+
+//banner
+//intro
 
 console.log('main');
+
+
+
+//outro
+
+//footer

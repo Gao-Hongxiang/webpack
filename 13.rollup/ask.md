@@ -84,6 +84,45 @@ load
 
 如果我不想建立代理模块来添加plyfill模块，而是通过ast来添加，添加完以后，还会返回执行吗 ??
 
+丁浩宇
+include和exclude是不是互斥的，配置了其中一个另一个就不需要配置了 
+
+webpack 
+module rules 
+{
+ include://,
+ exclude://
+}
+//这两个条件可以只指定
+只包含
+只排除
+
+两个都同时指定
+优先级
+
+
+```js
+console.log('import.meta.url', import.meta.url);
+dynamicImportPolyfill('./msg-80f39f29.js', import.meta.url).then(res =>
+  console.log(res.default));
+//import.meta.url=>http://127.0.0.1:8080/index.js
+function dynamicImportPolyfill(filename, url) {
+  return new Promise((resolve) => {
+    const script = document.createElement('script');
+    script.type = 'module';
+    script.onload = () => resolve(window.mod)
+    //absURL http://127.0.0.1:8080/msg-80f39f29.js
+    const absURL = new URL(filename, url).href;
+    console.log('absURL', absURL);
+    const blob = new Blob([
+      `import * as mod from "${absURL}";`,
+      `window.mod = mod;`
+    ], { type: 'text/javascript' });
+    script.src = URL.createObjectURL(blob);
+    document.head.appendChild(script);
+  });
+}
+```
 
 
 

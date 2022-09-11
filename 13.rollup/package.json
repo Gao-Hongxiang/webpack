@@ -5,7 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "build": "rollup -c"
+    "build": "rollup -c",
+    "build:watch": "rollup -c -w"
   },
   "keywords": [],
   "author": "",
@@ -14,6 +15,10 @@
     "rollup": "^2.79.0"
   },
   "devDependencies": {
-    "check-is-array": "^2.0.6"
+    "@babel/core": "^7.19.0",
+    "@babel/preset-env": "^7.19.0",
+    "@rollup/plugin-babel": "^5.3.1",
+    "check-is-array": "^2.0.6",
+    "rollup-pluginutils": "^2.8.2"
   }
 }

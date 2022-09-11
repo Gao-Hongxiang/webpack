@@ -1,13 +1,21 @@
 
 
-function build() {
+function build(pluginOptions) {
   return {
-    name: 'build',
-    async options() {
+    name: 'build',//插件的名字
+    /**
+     *  acorn, acornInjectPlugins, cache, context, experimentalCacheExpiry, external, inlineDynamicImports, input, makeAbsoluteExternalsRelative, manualChunks, maxParallelFileOps, maxParallelFileReads, moduleContext, onwarn, perf, plugins, preserveEntrySignatures, preserveModules, preserveSymlinks, shimMissingExports, strictDeprecations, treeshake, watch
+     */
+    async options(inputOptions) {
       console.log('options');
+      //此钩子一般不使用 因为它是在汇总配置之前执行的
+      return { ...inputOptions, extValue: 'value' };
     },
-    async buildStart() {
-      console.log('buildStart');
+    async buildStart(inputOptions) {
+      //如果你想读取所有的插件的配置内容的汇总，需要buildStart
+      console.log('buildStart', inputOptions);
+      console.log(inputOptions);
+      //inputOptions.input = ['./src/index2.js']
     },
     async resolveId(source, importer) {
       console.log(source, importer);

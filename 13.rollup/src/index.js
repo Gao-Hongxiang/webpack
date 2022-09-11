@@ -1,2 +1,9 @@
+import 'polyfill'
 console.log('main');
-import('./msg.js');
+
+var name = 'zhufeng';
+var age = 14;
+export {
+  name
+}
+export default age;

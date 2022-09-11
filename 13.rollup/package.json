@@ -12,5 +12,8 @@
   "license": "ISC",
   "dependencies": {
     "rollup": "^2.79.0"
+  },
+  "devDependencies": {
+    "check-is-array": "^2.0.6"
   }
 }

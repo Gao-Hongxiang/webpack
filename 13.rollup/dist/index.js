@@ -1,2 +1,3 @@
+console.log('腻子代码');
+
 console.log('main');
-import('./msg-ca034dda.js');

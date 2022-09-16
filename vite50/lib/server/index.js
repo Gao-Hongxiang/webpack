@@ -11,7 +11,7 @@ async function createServer() {
     async listen(port, callback) {
       //在项目启动前进行依赖的预构建
       //1.找到本项目依赖的第三方模块
-      await runOptimize(config);
+      await runOptimize(config, server);
       require('http')
         .createServer(middlewares)
         .listen(port, callback)
@@ -19,7 +19,8 @@ async function createServer() {
   }
   return server;
 }
-async function runOptimize(config) {
-  await createOptimizeDepsRun(config);
+async function runOptimize(config, server) {
+  const optimizeDeps = await createOptimizeDepsRun(config);
+  server._optimizeDepsMetadata = optimizeDeps.metadata;
 }
 exports.createServer = createServer;

@@ -39,7 +39,7 @@ async function getScanPlugin(config, depImports) {
         if (resolved) {
           const id = resolved.id || resolved;//此模块的绝对路径
           if (id.includes('node_modules')) {
-            depImports[path] = normalizePath(id);
+            depImports[path] = normalizePath(id);//key是包名，值是此包esmodule格式的入口文件的绝对路径
             return {
               path: id,
               external: true//表示这是一个外部模块，不需要进一步处理了

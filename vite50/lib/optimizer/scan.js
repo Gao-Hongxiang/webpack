@@ -1,4 +1,5 @@
 const { build } = require('esbuild');
+const path = require('path');
 const getScanPlugin = require('./getScanPlugin');
 /**
  * 扫描项目中导入第三方模块
@@ -18,5 +19,6 @@ async function scanImports(config) {
     write: true,//在真实的代码write=false,不需要写入硬盘，
     plugins: [scanPlugin]
   });
+  return depImports;
 }
 module.exports = scanImports;

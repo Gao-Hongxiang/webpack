@@ -3,6 +3,7 @@ const htmlTypesRE = /\.html$/;
 const scriptModuleRE = /<script\s+type="module"\s+src\="(.+?)">/;
 const { createPluginContainer } = require('../server/pluginContainer');
 const resolvePlugin = require('../plugins/resolve');
+const { normalizePath } = require('../utils');
 /**
  * 获取esbuild扫描插件的工厂方法
  * @param {*} config 配置对象 root

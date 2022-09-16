@@ -1,8 +1,8 @@
-
 const pathLib = require('path');
 const resolve = require('resolve');
+const fs = require('fs-extra');
 //既是一个vite插件也是一个rollup 插件
-function resolvePlugin({ root, resolve: { alias } }) {
+function resolvePlugin({ root }) {
   return {
     name: 'resolve',
     //path绝对,相对,第三方,别名
@@ -34,11 +34,11 @@ function resolvePlugin({ root, resolve: { alias } }) {
 }
 function tryNodeResolve(path, importer, root) {
   //vue/package.json
-  const pkgPath = resolve.sync(`${path}/package.json`, { baseDir: root });
+  const pkgPath = resolve.sync(`${path}/package.json`, { basedir: root });
   const pkgDir = pathLib.dirname(pkgPath);
   const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
   const entryPoint = pkg.module;//module字段指的是是es module格式的入口
-  const entryPointPath = path.join(pkgDir, entryPoint);
+  const entryPointPath = pathLib.join(pkgDir, entryPoint);
   //C:\vite50use\node_modules\vue\dist\vue.runtime.esm-bundler.js
   return { id: entryPointPath }
 }

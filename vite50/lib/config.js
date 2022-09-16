@@ -1,7 +1,8 @@
 
 const { normalizePath } = require('./utils');
 async function resolveConfig() {
-  const root = normalizePath(process.cwd());
+  //root指的是当前命令所在的目录，也就是根目录
+  const root = normalizePath(process.cwd());//  __dirname
   const config = {
     root
   }

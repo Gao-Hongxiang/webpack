@@ -1,3 +1,3 @@
-import { createApp as createApp1 } from 'vue';
-import { createApp as createApp2 } from 'vue';
-console.log(createApp1, createApp2);
+import { createApp } from 'vue';
+import App from './App.vue';
+createApp(App).mount('#app');

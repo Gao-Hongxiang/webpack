@@ -392,3 +392,28 @@ shine
 yjg
 不能 
 
+
+为什么只请求了1次 这里是那里判断了？
+为什么只请求了1次 这里是那里判断了？ 
+yjg
+碰到相同文件会从缓存中获取 
+shine
+应该是rollup在处理源代码的时候就去重了吧？ 
+shine
+还是esbuild去重了 
+
+
+
+17:23
+shine
+有个问题老师 
+这个defineplugin是vite-vue-plugin这个插件来实现的，那defineplugin就是vite-vue-plugin的依赖？ 
+
+
+definePlugin是vite内置插件
+vue插件提供替换的值
+
+
+app.vue里面的内容为啥要编译成这样  ? 
+
+

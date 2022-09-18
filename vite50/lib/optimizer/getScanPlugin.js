@@ -22,6 +22,17 @@ async function getScanPlugin(config, depImports) {
   return {
     name: 'scan',//依赖扫描插件
     setup(build) {
+      //如果遇到vue文件，则返回它的绝对路径，并且标识为外部依赖，不再进一步解析了
+      build.onResolve({ filter: /\.vue$/ }, async ({ path: id, importer }) => {
+        //把任意路径转成绝对路径 path可能是相对./index.html 绝对c:/index.html也可能是第三方 index
+        const resolved = await resolve(id, importer)
+        if (resolved) {
+          return {
+            path: resolved.id || resolved,
+            external: true
+          }
+        }
+      });
       //入口文件是index.html,找index.html它的真实路径，
       build.onResolve({ filter: htmlTypesRE }, async ({ path, importer }) => {
         //把任意路径转成绝对路径 path可能是相对./index.html 绝对c:/index.html也可能是第三方 index

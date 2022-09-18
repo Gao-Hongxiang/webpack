@@ -4,3 +4,9 @@ function normalizePath(path) {
   return path.replace(/\\/g, '/');
 }
 exports.normalizePath = normalizePath;
+
+const knowJsSrcRE = /\.js($|\?)/;
+const isJSRequest = (url) => {
+  return knowJsSrcRE.test(url);
+}
+exports.isJSRequest = isJSRequest;

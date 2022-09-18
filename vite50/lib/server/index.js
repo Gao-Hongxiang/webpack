@@ -20,6 +20,11 @@ async function createServer() {
         .listen(port, callback)
     }
   }
+  for (const plugin of config.plugins) {
+    if (plugin.configureServer) {
+      plugin.configureServer(server);
+    }
+  }
   // main.js中vue=>/node_modules/.vite/deps/vue.js?v=8406a619'
   middlewares.use(transformMiddleware(server));
   middlewares.use(serveStaticMiddleware(config));

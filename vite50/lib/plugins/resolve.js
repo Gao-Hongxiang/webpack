@@ -7,13 +7,13 @@ function resolvePlugin({ root }) {
     name: 'resolve',
     //path绝对,相对,第三方,别名
     resolveId(path, importer) {
+      //如果path是一个绝对路径
+      if (pathLib.isAbsolute(path) && fs.pathExistsSync(path)) {
+        return { id: path };
+      }
       //  /src/main.js
       if (path.startsWith('/')) {//如果path以/开头，说明它是一个根目录下的绝对路径
         return { id: pathLib.resolve(root, path.slice(1)) };
-      }
-      //如果path是一个绝对路径
-      if (pathLib.isAbsolute(path)) {
-        return { id: path };
       }
       //如果是相对路径的话
       if (path.startsWith('.')) {
@@ -21,11 +21,11 @@ function resolvePlugin({ root }) {
         const fsPath = pathLib.resolve(baseDir, path);
         return { id: fsPath }
       }
-      if (path.startsWith('@')) {
+      /* if (path.startsWith('@')) {
         const baseDir = alias['@'];
         const fsPath = pathLib.resolve(baseDir, path);
         return { id: fsPath }
-      }
+      } */
       //如果是第三方的话
       let res = tryNodeResolve(path, importer, root);
       if (res) return res;
@@ -40,6 +40,7 @@ function tryNodeResolve(path, importer, root) {
   const entryPoint = pkg.module;//module字段指的是是es module格式的入口
   const entryPointPath = pathLib.join(pkgDir, entryPoint);
   //C:\vite50use\node_modules\vue\dist\vue.runtime.esm-bundler.js
+  //现在返回的vue的es module的入口文件
   return { id: entryPointPath }
 }
 module.exports = resolvePlugin;

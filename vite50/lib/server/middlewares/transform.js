@@ -4,7 +4,6 @@ const transformRequest = require('../transformRequest');
 function transformMiddleware(server) {
   return async function (req, res, next) {
     if (req.method !== 'GET') return next();
-    debugger
     //获取路径名 /src/main.js?id=1#top pathname=/src/main.js query={id:1}
     //let pathname = parse(req.url).pathname;
     //如果请求的资源是JS的话，重写第三方模块的路径

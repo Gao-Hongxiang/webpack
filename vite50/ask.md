@@ -433,3 +433,105 @@ vue里面引入的第三方库就不再处理
 
 我们的本地模块，或者说自己写的模块，本来就不会预编译 
 我们只会预编译 第三方模块
+
+
+
+是不是http协议改成其他协议，就会出发upgrade 是的
+shine撤回了一条消息
+shine
+这个upgrade是client发的还是浏览器自动？ 
+所谓的client就是指的浏览器
+
+Potter
+应该在client里面 
+Wáng
+如果不是vite-hmr就不升级了？ 
+shine
+ws协议本身就会升级，应该是处理不同？ 
+
+
+
+
+wss=websocket服务器
+和ws区别在。。 没有 ws
+Potter
+协商头升级头标记 
+K
+浏览器里new websocket 连接 服务器，是http请求？ 不是ws吗？ 
+第一次连接 的确是http请求，使用的是http协议
+然后http服务器会把协议升级成websocket
+
+
+ws应该指的的是handle Upgrade中回调函数的参数 
+
+那在network 里面看不到第一次吗 
+
+
+
+shine
+白色的那个就是第一次 
+K
+第一次连接 也是唯一的一次
+K
+哦哦 
+shine
+升级了不需要重新发请求 
+
+要想处理这个冒泡的过程
+知道什么信息?
+1.知道哪些模块导入了哪些模块
+2.知道父模块可以接收哪些子模块的变更
+
+知道我引的谁？谁引入的我
+
+
+22:02
+Wáng
+如果不同意升级，是不是这个链接就报错 
+Wáng
+如果不挂电话，ws会不会占用http的通道  会占用一个连接  会占用一个通道 
+Potter
+应该算共用tcp通道，进行消息处理吧 
+
+websocket http tcp
+
+22:09
+shine
+那 处理者怎么知道这条该不该接收呢》是不是应该标志？  vite-hmr
+Potter
+叶子节点到根节点，建立依赖树？ 是的
+shine
+嗷 明白了！消息处理方应该知道那些消息我该处理，而不是发送方指定 
+Potter
+老师：今晚讲到几点呀？ 
+shine
+10.30 坚持！ 
+K
+是不是要搞一个文件的二叉树 
+shine
+有点像 rollup 、lib下的scope 
+Potter
+rollup treeshaking 思想 
+22:20
+shine
+analysis的时候？ 
+
+22:29
+Wáng
+基于tcp 
+shine
+tcp 协议底层 http 和ws 是实现 
+Wáng
+建立tcp链接，发送http请求 
+
+http 和websocket是应用层协议
+tcp传输协议
+
+1 
+Potter
+1 
+K
+老师 你刚画那张图 等你讲完了 再看下哈 
+22:38
+帅汤汤
+resolve 

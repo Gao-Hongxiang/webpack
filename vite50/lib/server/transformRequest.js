@@ -18,10 +18,10 @@ async function transformRequest(url, server) {
   if (loadResult) {
     code = loadResult.code;
   } else {
-    debugger
     let fsPath = id.split('?')[0];
     code = await fs.readFile(fsPath, 'utf-8');
   }
+  await server.moduleGraph.ensureEntryFromUrl(url);
   //transform / 转换 / src / main.js的内容 把vue => vue.js
   const result = pluginContainer.transform(code, id);
   return result;

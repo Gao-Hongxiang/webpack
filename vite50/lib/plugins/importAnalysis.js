@@ -6,6 +6,7 @@ function importAnalysis(config) {
     name: 'importAnalysis',
     //1.找到源文件中第三方模块2.进行转换 vue=>deps/vue.js
     async transform(source, importer) {
+      debugger
       await init;//等待解析器初始化完成
       //获取导入的模块
       let imports = parse(source)[0];

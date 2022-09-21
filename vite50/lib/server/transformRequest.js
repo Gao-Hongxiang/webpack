@@ -1,10 +1,12 @@
 const fs = require('fs-extra');
+const { parse } = require('url');
 /**
  * 转换请求 
  * @param {*} url 请求的的资源 /src/main.js
  * @param {*} server 
  */
 async function transformRequest(url, server) {
+  //此处传过来的url是包含查询字符串的
   //resolveId 获取 /src/main.js的绝对路径
   const { pluginContainer } = server;
   //此处其实是调用lib\plugins\resolve.js里的resolveId方法返回绝对路径
@@ -16,7 +18,9 @@ async function transformRequest(url, server) {
   if (loadResult) {
     code = loadResult.code;
   } else {
-    code = await fs.readFile(id, 'utf-8');
+    debugger
+    let fsPath = id.split('?')[0];
+    code = await fs.readFile(fsPath, 'utf-8');
   }
   //transform / 转换 / src / main.js的内容 把vue => vue.js
   const result = pluginContainer.transform(code, id);

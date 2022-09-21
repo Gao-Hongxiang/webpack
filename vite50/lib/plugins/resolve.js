@@ -8,12 +8,13 @@ function resolvePlugin({ root }) {
     //path绝对,相对,第三方,别名
     resolveId(path, importer) {
       //如果path是一个绝对路径
-      if (pathLib.isAbsolute(path) && fs.pathExistsSync(path)) {
-        return { id: path };
-      }
+
       //  /src/main.js
       if (path.startsWith('/')) {//如果path以/开头，说明它是一个根目录下的绝对路径
         return { id: pathLib.resolve(root, path.slice(1)) };
+      }
+      if (pathLib.isAbsolute(path)) {
+        return { id: path };
       }
       //如果是相对路径的话
       if (path.startsWith('.')) {

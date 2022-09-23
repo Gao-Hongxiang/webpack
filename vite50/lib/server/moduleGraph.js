@@ -37,5 +37,19 @@ class ModuleGraph {
     const resolved = await this.resolveId(url);
     return [url, resolved.id || resolved];
   }
+  async updateModuleInfo(importerModule, importedUrls, acceptedUrls) {
+    //建立父子关系 让导入的模块imported Module，的importers包括importerModule
+    for (const importedUrl of importedUrls) {
+      const depModule = await this.ensureEntryFromUrl(importedUrl);
+      //依赖的模块导入方是importerModule 
+      depModule.importers.add(importerModule);
+    }
+    //维护接收的热更新依赖
+    const acceptedHmrDeps = importerModule.acceptedHmrDeps;
+    for (const acceptedUrl of acceptedUrls) {
+      const acceptedModule = await this.ensureEntryFromUrl(acceptedUrl);
+      acceptedHmrDeps.add(acceptedModule);
+    }
+  }
 }
 exports.ModuleGraph = ModuleGraph;

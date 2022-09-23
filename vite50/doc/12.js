@@ -1,15 +1,3 @@
-
-
-/**
- * 当检测到文件发生改变后，处理热更新
- * @param {*} file 变化的文件
- * @param {*} server 
- */
-async function handleHMRUpdate(file, server) {
-
-}
-exports.handleHMRUpdate = handleHMRUpdate;
-//有限状态机
 const LexerState = {
   inCall: 0,//方法调用中
   inQuoteString: 1//在字符串中，引号里面就是1
@@ -50,5 +38,12 @@ function lexAcceptedHmrDeps(code, start, acceptedUrls) {
         break;
     }
   }
+
 }
-exports.lexAcceptedHmrDeps = lexAcceptedHmrDeps;
+
+let code = `import.meta.hot.accept(['./renderModule.js','otherModule.js']`;
+const urls = new Set();
+lexAcceptedHmrDeps(code, 23, urls);
+for (let url of urls) {
+  console.log(url);
+}

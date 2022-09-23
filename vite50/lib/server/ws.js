@@ -22,7 +22,7 @@ function createWebSocketServer(httpServer) {
     off: webSocketServer.off.bind(webSocketServer),//取消监听客户端发过来的请求
     send(payload) {//调用此方法可以向所有的客户端发送消息
       const stringified = JSON.stringify(payload);
-      webSocketServer.clients.forEach(client => {
+      webSocketServer.clients.forEach(client => {//服务器向所有的客户端进行广播 
         client.send(stringified);
       });
     }

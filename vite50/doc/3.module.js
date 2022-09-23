@@ -7,3 +7,7 @@ const { init, parse } = require('es-module-lexer');
   const [imports, exports] = parse(sourceCode);
   console.log(imports, exports);
 })();
+
+/* import.meta.hot.accept(['./renderModule.js'], ([renderModule]) => {
+  renderModule.render();
+}); */

@@ -535,3 +535,36 @@ K
 22:38
 帅汤汤
 resolve 
+
+
+shine
+老师 那个renderXXX的地方有点没懂  就是hmr的那个 
+Potter
+老师啥时候讲一下怎么调试vite3的真实源码呗  
+下节课一定讲！！！
+K
+刚才画的那个图 能再看下吗 
+shine
+这个函数是重新执行整个js的逻辑还是？ 
+重新执行整个模块的内容
+
+
+先说一下热更新思路
+1.会在服务器端构建一个moduleGraph,或者说模块依赖图，里面会记录
+每个模块的信息。
+idToModuleMap key模块的绝对路径 值是模块节点的对象
+ModuleNode
+importers 此模块被哪些模块导入了，或者说依赖了
+acceptedHmrDeps 当哪些子模块发生变更 的时候，自己的可以处理对应的更新了
+a  [b,c,d]
+a acceptedHmrDeps b 只能接受或者说处理b的更新
+
+
+
+Potter
+直接弄个正则匹配import.meta.accept中的第一个参数，不好些么 
+正则可以实现
+但是你发现
+shine
+import.meta.accept 这段代码是在哪里添加进去的有点懵了 
+import.meta.accept是我们在代码中写死的

@@ -6,8 +6,9 @@ class ModuleNode {
   importers = new Set()
   //我这个模块可以接收哪些模块的修改
   acceptedHmrDeps = new Set()//exports中的一部分
-  constructor(url) {
+  constructor(url, type = 'js') {
     this.url = url;
+    this.type = type;
   }
 }
 /**
@@ -42,11 +43,11 @@ class ModuleGraph {
     for (const importedUrl of importedUrls) {
       const depModule = await this.ensureEntryFromUrl(importedUrl);
       //依赖的模块导入方是importerModule 
-      depModule.importers.add(importerModule);
+      depModule.importers.add(importerModule);//让renderModule的importers里添加main.js
     }
     //维护接收的热更新依赖
     const acceptedHmrDeps = importerModule.acceptedHmrDeps;
-    for (const acceptedUrl of acceptedUrls) {
+    for (const acceptedUrl of acceptedUrls) {//让main.js的acceptedHmrDeps里包括renderModule
       const acceptedModule = await this.ensureEntryFromUrl(acceptedUrl);
       acceptedHmrDeps.add(acceptedModule);
     }

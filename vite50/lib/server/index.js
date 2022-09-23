@@ -16,7 +16,6 @@ async function createServer() {
   const middlewares = connect();
   const httpServer = require('http')
     .createServer(middlewares);
-  debugger
   const ws = createWebSocketServer(httpServer, config);
   const watcher = chokidar.watch(path.resolve(config.root), {
     ignored: [

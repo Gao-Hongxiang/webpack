@@ -1,4 +1,5 @@
 const { init, parse } = require('es-module-lexer');
+const path = require('path');
 const MagicString = require('magic-string');
 const { lexAcceptedHmrDeps } = require('../server/hmr');
 function importAnalysis(config) {
@@ -9,8 +10,12 @@ function importAnalysis(config) {
     configureServer(_server) {
       server = _server;
     },
+    //处理模块 1.找文件 2读内容 3 转换内容
+    //假如说我们转的是src/main.js source= main.js的原始内容
+    //id就是此模块的绝对路径
     //1.找到源文件中第三方模块2.进行转换 vue=>deps/vue.js
-    async transform(source, importer) {
+    async transform(source, id) {//moduleId
+      debugger
       await init;//等待解析器初始化完成
       //获取导入的模块
       let imports = parse(source)[0];
@@ -20,21 +25,23 @@ function importAnalysis(config) {
       }
       const { moduleGraph } = server;
       //通过导入方的模块的路径获取模块的节点
-      const importerModule = moduleGraph.getModuleById(importer);//main.js
+      const currentModule = moduleGraph.getModuleById(id);//main.js
       //此模块将要导入的子模块
       const importedUrls = new Set();//renderModule.js
       //接收变更的依赖模块
       const acceptedUrls = new Set();//renderModule.js
       const ms = new MagicString(source);
       //url= vue =>  /node_modules/.vite/deps/vue.js
-      const normalizeUrl = async (url) => {
+      const normalizeUrl = async (url) => {//./renderModule.js
         //内部其实是调用插件容器的resolveId方法返回url的绝对路径
-        const resolved = await this.resolve(url, importer);
+        //resolved=C:\aproject\webpack202208\vite50use\src\renderModule.js
+        const resolved = await this.resolve(url, id);
+        //
         if (resolved && resolved.id.startsWith(root)) {
           //C:/vite50use/src/main.js=>/src/main.js
           //C:/vite50use/node_modules/.vite50/deps/vue.js
           // /node_modules/.vite50/deps/vue.js
-          url = resolved.id.slice(root.length);
+          url = resolved.id.slice(root.length);// /src/renderModule.js
         }
         await moduleGraph.ensureEntryFromUrl(url);//建立此导入的模块和模块节点的对应关系
         return url;
@@ -56,7 +63,7 @@ function importAnalysis(config) {
             }
           }
         }
-        if (specifier) {
+        if (specifier) {//./renderModule.js
           const normalizedUrl = await normalizeUrl(specifier);
           if (specifier !== normalizedUrl) {
             ms.overwrite(start, end, normalizedUrl);
@@ -66,17 +73,26 @@ function importAnalysis(config) {
         }
       }
       const normalizedAcceptedUrls = new Set();
+      const toAbsoluteUrl = (url) => {
+        //我们找./renderModule.js的时候需要去main.js所在的目录里找相对路径
+        return path.posix.resolve(path.posix.dirname(currentModule.url), url)
+      }
       for (const { url, start, end } of acceptedUrls) {
-        const [rawUrl, normalized] = await moduleGraph.resolveUrl(url);
+        //./renderModule.js  resolveUrl是的根目录下面的
+        const normalized = await normalizeUrl(
+          toAbsoluteUrl(url)
+        );
         normalizedAcceptedUrls.add(normalized);
         ms.overwrite(start, end, JSON.stringify(normalized));
       }
       //更新模块的依赖信息
       await moduleGraph.updateModuleInfo(
-        importerModule,
+        currentModule,
         importedUrls,
         normalizedAcceptedUrls
       );
+      console.log(importedUrls);//Set(1) { '/src/renderModule.js' }
+      console.log(normalizedAcceptedUrls);
       return ms.toString();
     }
   }
